@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header Section -->
+    <div class="mb-10">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">إدارة الملفات</h1>
+        <p class="text-gray-600">قم بإدارة وتنظيم جميع ملفاتك المخزنة بشكل آمن</p>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-2xl shadow-lg mb-10 border border-blue-100">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">رفع ملف جديد</h2>
+                <p class="text-gray-600">اختر ملف لرفعه وتخزينه بشكل مشفر وآمن</p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+            </div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-grow">
+                    <div class="relative border-2 border-dashed border-blue-300 rounded-xl p-6 hover:border-blue-400 transition-all duration-300 bg-white">
+                        <input type="file" name="file" required 
+                               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                               onchange="updateFileName(this)">
+                        <div class="text-center">
+                            <svg class="mx-auto h-12 w-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600" id="file-name">انقر لاختيار الملف أو اسحب وأفلت</p>
+                            <p class="text-xs text-gray-500 mt-1">الحد الأقصى للملف: 100 ميجابايت</p>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" 
+                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    رفع الملف
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Files Section -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="p-8 border-b border-gray-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">الملفات المخزنة</h2>
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                            {{ files|length }} ملف
+                        </span>
+                        <a href="{{ url_for('delete_all_files') }}" 
+                           class="text-red-600 hover:text-red-800 text-sm font-medium transition-colors">
+                           حذف الكل
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="relative">
+                        <input type="text" placeholder="بحث في الملفات..." 
+                               class="w-full md:w-64 px-4 py-2 pl-10 pr-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if files %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="py-4 px-6 text-right font-semibold text-gray-700">اسم الملف</th>
+                        <th class="py-4 px-6 text-right font-semibold text-gray-700">الحجم</th>
+                        <th class="py-4 px-6 text-right font-semibold text-gray-700">النوع</th>
+                        <th class="py-4 px-6 text-right font-semibold text-gray-700">تاريخ الرفع</th>
+                        <th class="py-4 px-6 text-right font-semibold text-gray-700">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for file in files %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    {% if file.file_type and 'image' in file.file_type %}
+                                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                    {% elif file.file_type and 'pdf' in file.file_type %}
+                                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        </svg>
+                                    {% else %}
+                                        <svg class="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">{{ file.filename }}</p>
+                                    <p class="text-sm text-gray-500">ID: {{ file._id }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                {{ (file.file_size / 1024)|round(2) }} ك.ب
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 text-gray-700">
+                            {{ file.file_type or 'غير معروف' }}
+                        </td>
+                        <td class="py-4 px-6 text-gray-700">
+                            {{ file.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                            <p class="text-sm text-gray-500">منذ {{ ((now - file.uploaded_at).days) }} أيام</p>
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <a href="{{ url_for('download_file', file_id=file._id) }}" 
+                                   class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-300">
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    تحميل
+                                </a>
+                                <button onclick="confirmDelete('{{ file._id }}', '{{ file.filename }}')"
+                                        class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300">
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination or Stats -->
+        <div class="p-6 border-t border-gray-200">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    إجمالي المساحة المستخدمة: 
+                    <span class="font-semibold">{{ (files|sum(attribute='file_size') / (1024*1024))|round(2) }} ميجابايت</span>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <nav class="inline-flex rounded-md shadow">
+                        <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            السابق
+                        </a>
+                        <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            1
+                        </a>
+                        <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            2
+                        </a>
+                        <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            التالي
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="p-12 text-center">
+            <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد ملفات</h3>
+            <p class="text-gray-600 mb-6">لم تقم برفع أي ملفات بعد. ابدأ برفع أول ملف لك.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-xl bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">تأكيد الحذف</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500" id="deleteMessage">
+                    هل أنت متأكد من أنك تريد حذف هذا الملف؟
+                </p>
+            </div>
+            <div class="items-center px-4 py-3 mt-4">
+                <div class="flex justify-center space-x-4 space-x-reverse">
+                    <button id="cancelDelete" 
+                            class="px-6 py-2 text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <a id="confirmDelete" href="#"
+                       class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        نعم، احذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateFileName(input) {
+    const fileNameDisplay = document.getElementById('file-name');
+    if (input.files.length > 0) {
+        fileNameDisplay.textContent = input.files[0].name;
+        fileNameDisplay.classList.add('text-blue-600', 'font-medium');
+    }
+}
+
+function confirmDelete(fileId, fileName) {
+    const modal = document.getElementById('deleteModal');
+    const message = document.getElementById('deleteMessage');
+    const confirmLink = document.getElementById('confirmDelete');
+    
+    message.textContent = `هل أنت متأكد من أنك تريد حذف الملف "${fileName}"؟ هذا الإجراء لا يمكن التراجع عنه.`;
+    confirmLink.href = `/delete_file/${fileId}`;
+    
+    modal.classList.remove('hidden');
+    
+    document.getElementById('cancelDelete').onclick = function() {
+        modal.classList.add('hidden');
+    };
+    
+    // Close modal when clicking outside
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    };
+}
+
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to table rows
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.style.transform = 'translateX(-4px)';
+            row.style.transition = 'transform 0.2s ease';
+        });
+        row.addEventListener('mouseleave', () => {
+            row.style.transform = 'translateX(0)';
+        });
+    });
+});
+</script>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Smooth transitions */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}
+
+/* Hover effects */
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+</style>
+{% endblock %}

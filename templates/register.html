@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+        <!-- بطاقة التسجيل -->
+        <div class="glass-effect rounded-2xl shadow-2xl overflow-hidden card-hover">
+            <!-- الهيدر -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <i class="fas fa-user-plus text-2xl"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-center">إنشاء حساب جديد</h2>
+                <p class="text-blue-200 text-center mt-2">انضم إلى نظام الملفات الآمن</p>
+            </div>
+            
+            <!-- النموذج -->
+            <div class="p-6">
+                <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                    <div class="space-y-4">
+                        <!-- حقل اسم المستخدم -->
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user ml-2"></i>
+                                اسم المستخدم
+                            </label>
+                            <div class="relative">
+                                <input type="text" 
+                                       id="username" 
+                                       name="username" 
+                                       required
+                                       class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                                       placeholder="أدخل اسم المستخدم">
+                                <div class="absolute left-3 top-3">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="username-feedback" class="text-xs text-gray-500 mt-1"></div>
+                        </div>
+                        
+                        <!-- حقل البريد الإلكتروني -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope ml-2"></i>
+                                البريد الإلكتروني
+                            </label>
+                            <div class="relative">
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       required
+                                       class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                                       placeholder="example@email.com">
+                                <div class="absolute left-3 top-3">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- حقل كلمة المرور -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-lock ml-2"></i>
+                                كلمة المرور
+                            </label>
+                            <div class="relative">
+                                <input type="password" 
+                                       id="password" 
+                                       name="password" 
+                                       required
+                                       class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                                       placeholder="كلمة المرور">
+                                <div class="absolute left-3 top-3">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <button type="button" 
+                                        onclick="togglePassword('password')"
+                                        class="absolute left-10 top-3 text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <div class="flex items-center mb-1">
+                                    <div id="strength-bar" class="h-2 flex-grow bg-gray-200 rounded-full overflow-hidden">
+                                        <div id="strength-fill" class="h-full w-0 bg-red-500 transition-all duration-300"></div>
+                                    </div>
+                                    <span id="strength-text" class="text-xs font-medium mr-2 text-red-500">ضعيف</span>
+                                </div>
+                                <ul class="text-xs text-gray-500 space-y-1 mt-2">
+                                    <li id="length-check" class="flex items-center">
+                                        <i class="fas fa-times text-red-500 ml-2"></i>
+                                        <span>8 أحرف على الأقل</span>
+                                    </li>
+                                    <li id="number-check" class="flex items-center">
+                                        <i class="fas fa-times text-red-500 ml-2"></i>
+                                        <span>رقم واحد على الأقل</span>
+                                    </li>
+                                    <li id="uppercase-check" class="flex items-center">
+                                        <i class="fas fa-times text-red-500 ml-2"></i>
+                                        <span>حرف كبير واحد على الأقل</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- زر التسجيل -->
+                        <button type="submit" 
+                                id="submit-btn"
+                                class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition duration-300 transform hover:-translate-y-1 shadow-lg">
+                            <i class="fas fa-user-plus ml-2"></i>
+                            إنشاء الحساب
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- رابط تسجيل الدخول -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-center text-gray-600">
+                        لديك حساب بالفعل؟
+                        <a href="{{ url_for('login') }}" class="text-blue-600 hover:text-blue-800 font-semibold transition duration-300">
+                            <i class="fas fa-sign-in-alt ml-1"></i>
+                            تسجيل الدخول
+                        </a>
+                    </p>
+                </div>
+                
+                <!-- معلومات الأمان -->
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-shield-alt text-blue-600 text-lg mt-1 ml-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-blue-800">حماية بياناتك</h4>
+                            <p class="text-sm text-blue-700 mt-1">
+                                جميع بياناتك مشفرة باستخدام تقنيات AES-256 المتقدمة. نحن نلتزم بحماية خصوصيتك.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = field.parentElement.querySelector('.fa-eye');
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+
+function checkPasswordStrength(password) {
+    let strength = 0;
+    const checks = {
+        length: password.length >= 8,
+        number: /\d/.test(password),
+        uppercase: /[A-Z]/.test(password),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    
+    Object.values(checks).forEach(check => {
+        if (check) strength++;
+    });
+    
+    return { strength, checks };
+}
+
+document.getElementById('password').addEventListener('input', function(e) {
+    const password = e.target.value;
+    const { strength, checks } = checkPasswordStrength(password);
+    
+    // تحديث شريط القوة
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthText = document.getElementById('strength-text');
+    
+    let color, text, width;
+    if (strength === 0) {
+        color = 'bg-red-500'; text = 'ضعيف'; width = '25%';
+    } else if (strength <= 2) {
+        color = 'bg-yellow-500'; text = 'متوسط'; width = '50%';
+    } else if (strength <= 3) {
+        color = 'bg-blue-500'; text = 'جيد'; width = '75%';
+    } else {
+        color = 'bg-green-500'; text = 'قوي'; width = '100%';
+    }
+    
+    strengthFill.className = `h-full ${color} transition-all duration-300`;
+    strengthFill.style.width = width;
+    strengthText.textContent = text;
+    strengthText.className = `text-xs font-medium mr-2 ${color.replace('bg-', 'text-')}`;
+    
+    // تحديث علامات الاختيار
+    document.getElementById('length-check').querySelector('i').className = 
+        checks.length ? 'fas fa-check text-green-500 ml-2' : 'fas fa-times text-red-500 ml-2';
+    document.getElementById('number-check').querySelector('i').className = 
+        checks.number ? 'fas fa-check text-green-500 ml-2' : 'fas fa-times text-red-500 ml-2';
+    document.getElementById('uppercase-check').querySelector('i').className = 
+        checks.uppercase ? 'fas fa-check text-green-500 ml-2' : 'fas fa-times text-red-500 ml-2';
+});
+
+// التحقق من اسم المستخدم
+document.getElementById('username').addEventListener('blur', async function(e) {
+    const username = e.target.value;
+    const feedback = document.getElementById('username-feedback');
+    
+    if (username.length < 3) {
+        feedback.textContent = 'يجب أن يكون اسم المستخدم 3 أحرف على الأقل';
+        feedback.className = 'text-xs text-red-500 mt-1';
+        return;
+    }
+    
+    // هنا يمكن إضافة استدعاء API للتحقق من توفر اسم المستخدم
+    feedback.textContent = 'جاري التحقق...';
+    feedback.className = 'text-xs text-blue-500 mt-1';
+    
+    // محاكاة التحقق
+    setTimeout(() => {
+        feedback.textContent = 'اسم المستخدم متاح ✓';
+        feedback.className = 'text-xs text-green-500 mt-1';
+    }, 1000);
+});
+</script>
+{% endblock %}

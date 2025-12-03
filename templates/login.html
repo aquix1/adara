@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+        <!-- بطاقة تسجيل الدخول -->
+        <div class="glass-effect rounded-2xl shadow-2xl overflow-hidden card-hover">
+            <!-- الهيدر -->
+            <div class="bg-gradient-to-r from-green-600 to-green-800 p-6 text-white">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="bg-white/20 p-3 rounded-full">
+                        <i class="fas fa-sign-in-alt text-2xl"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-center">تسجيل الدخول</h2>
+                <p class="text-green-200 text-center mt-2">مرحباً بعودتك</p>
+            </div>
+            
+            <!-- النموذج -->
+            <div class="p-6">
+                <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+                    <div class="space-y-4">
+                        <!-- حقل البريد الإلكتروني -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope ml-2"></i>
+                                البريد الإلكتروني
+                            </label>
+                            <div class="relative">
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       required
+                                       class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300"
+                                       placeholder="أدخل بريدك الإلكتروني">
+                                <div class="absolute left-3 top-3">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- حقل كلمة المرور -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-lock ml-2"></i>
+                                كلمة المرور
+                            </label>
+                            <div class="relative">
+                                <input type="password" 
+                                       id="password" 
+                                       name="password" 
+                                       required
+                                       class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300"
+                                       placeholder="أدخل كلمة المرور">
+                                <div class="absolute left-3 top-3">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <button type="button" 
+                                        onclick="togglePassword('password')"
+                                        class="absolute left-10 top-3 text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- تذكرني -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" 
+                                       id="remember" 
+                                       name="remember"
+                                       class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                <label for="remember" class="mr-2 text-sm text-gray-700">
+                                    تذكر دخولي
+                                </label>
+                            </div>
+                            
+                            <!-- مصادقة ثنائية -->
+                            <div class="flex items-center">
+                                <i class="fas fa-mobile-alt text-gray-400 ml-2"></i>
+                                <span class="text-sm text-gray-600">2FA</span>
+                            </div>
+                        </div>
+                        
+                        <!-- زر تسجيل الدخول -->
+                        <button type="submit" 
+                                class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition duration-300 transform hover:-translate-y-1 shadow-lg">
+                            <i class="fas fa-sign-in-alt ml-2"></i>
+                            تسجيل الدخول
+                        </button>
+                        
+                        <!-- تسجيل الدخول عبر -->
+                        <div class="relative my-6">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">أو تسجيل الدخول عبر</span>
+                            </div>
+                        </div>
+                        
+                        <!-- أزرار الوسائل الاجتماعية -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" 
+                                    class="flex items-center justify-center p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                                <i class="fab fa-google text-red-600 text-xl"></i>
+                                <span class="mr-2">Google</span>
+                            </button>
+                            <button type="button" 
+                                    class="flex items-center justify-center p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition">
+                                <i class="fab fa-microsoft text-blue-600 text-xl"></i>
+                                <span class="mr-2">Microsoft</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- رابط إنشاء حساب -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-center text-gray-600">
+                        ليس لديك حساب؟
+                        <a href="{{ url_for('register') }}" class="text-green-600 hover:text-green-800 font-semibold transition duration-300">
+                            <i class="fas fa-user-plus ml-1"></i>
+                            إنشاء حساب جديد
+                        </a>
+                    </p>
+                </div>
+                
+                <!-- معلومات الأمان -->
+                <div class="mt-6 bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-shield-alt text-green-600 text-lg mt-1 ml-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-green-800">جلسة آمنة</h4>
+                            <p class="text-sm text-green-700 mt-1">
+                                يتم تشفير جلسة الدخول الخاصة بك باستخدام TLS. نحن نراقب الأنشطة المشبوهة لحماية حسابك.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = field.parentElement.querySelector('.fa-eye');
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+</script>
+{% endblock %}

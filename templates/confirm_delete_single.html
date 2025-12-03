@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                تأكيد الحذف
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                هل أنت متأكد من حذف الملف؟
+            </p>
+        </div>
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    {{ file.filename }}
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                    تفاصيل الملف
+                </p>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            الحجم
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ (file.file_size / 1024)|round(2) }} كيلوبايت
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            تاريخ الرفع
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ file.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            نوع الملف
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ file.file_type or 'غير معروف' }}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+        
+        <div class="flex flex-col space-y-4">
+            <form method="POST" action="{{ url_for('delete_file', file_id=file._id) }}" class="space-y-4">
+                <div>
+                    <label for="confirmation" class="block text-sm font-medium text-gray-700 mb-2">
+                        اكتب "حذف" للتأكيد
+                    </label>
+                    <input type="text" name="confirmation" id="confirmation" required
+                           class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                           placeholder="اكتب 'حذف' هنا">
+                </div>
+                
+                <div class="flex space-x-4 space-x-reverse">
+                    <a href="{{ url_for('files') }}"
+                       class="flex-1 inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        إلغاء
+                    </a>
+                    <button type="submit"
+                            class="flex-1 inline-flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        حذف الملف
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="text-center">
+            <a href="{{ url_for('files') }}" class="font-medium text-blue-600 hover:text-blue-500">
+                ← العودة إلى قائمة الملفات
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const confirmation = document.getElementById('confirmation').value;
+    if (confirmation !== 'حذف') {
+        e.preventDefault();
+        alert('يرجى كتابة "حذف" بشكل صحيح للتأكيد');
+    }
+});
+</script>
+{% endblock %}

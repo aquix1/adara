@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- القسم الرئيسي -->
+<div class="max-w-6xl mx-auto text-center py-24 px-4">
+    <h1 class="text-5xl font-extrabold text-blue-600 mb-6 drop-shadow-lg">نظام إدارة الملفات والوثائق الآمن</h1>
+    <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto">
+        حافظ على ملفاتك ووثائقك بأعلى مستويات الأمان والتشفير. قم بإدارة ملفاتك، إنشاء الوثائق، وتتبع نشاطك بشكل آمن واحترافي.
+    </p>
+    
+    {% if 'user_id' not in session %}
+    <div class="flex justify-center gap-6 flex-wrap">
+        <a href="{{ url_for('register') }}" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-blue-700 transform hover:-translate-y-1 transition-all">
+            إنشاء حساب جديد
+        </a>
+        <a href="{{ url_for('login') }}" class="bg-green-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-green-700 transform hover:-translate-y-1 transition-all">
+            تسجيل الدخول
+        </a>
+    </div>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-blue-700 transform hover:-translate-y-1 transition-all">
+        الذهاب إلى لوحة التحكم
+    </a>
+    {% endif %}
+</div>
+
+<!-- مميزات النظام -->
+<div class="max-w-6xl mx-auto px-4 py-20">
+    <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">مميزات النظام</h2>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <div class="flex justify-center mb-4">
+                <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v4a4 4 0 004 4h10a4 4 0 004-4V7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7v4m10-4v4M7 11h10"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-blue-600 mb-3">إدارة الملفات</h3>
+            <p class="text-gray-700 text-lg">
+                رفع وتخزين الملفات من جميع الصيغ مع تشفير متقدم لضمان حماية محتواها من الوصول غير المصرح به.
+            </p>
+        </div>
+        
+        <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <div class="flex justify-center mb-4">
+                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.5c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5-7.5 3.358-7.5 7.5 3.358 7.5 7.5 7.5z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-green-600 mb-3">إدارة الوثائق</h3>
+            <p class="text-gray-700 text-lg">
+                إنشاء وتحرير الوثائق النصية بسهولة، مع إمكانية مشاركة آمنة وتتبع التعديلات بشكل كامل.
+            </p>
+        </div>
+        
+        <div class="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300">
+            <div class="flex justify-center mb-4">
+                <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-red-600 mb-3">الأمان والخصوصية</h3>
+            <p class="text-gray-700 text-lg">
+                كل بياناتك مشفرة بنظام متقدم مع إمكانية التحكم الكامل في من يمكنه الوصول إلى ملفاتك ووثائقك.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- مزايا إضافية -->
+<div class="bg-gray-50 py-20">
+    <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">مزايا إضافية</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg text-blue-600 mb-2">نسخ احتياطي تلقائي</h3>
+                <p class="text-gray-700 text-sm">حماية ملفاتك عبر نسخ احتياطي دوري بدون تدخل منك.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg text-green-600 mb-2">تتبع النشاط</h3>
+                <p class="text-gray-700 text-sm">مراقبة من قام بتعديل الملفات والوثائق لضمان الشفافية الكاملة.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h3 class="font-bold text-lg text-purple-600 mb-2">توافق مع الأجهزة</h3>
+                <p class="text-gray-700 text-sm">الوصول إلى الملفات والوثائق من أي جهاز، سواء هاتف أو كمبيوتر.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- دعوة للعمل -->
+<div class="max-w-6xl mx-auto text-center py-20 px-4">
+    <h2 class="text-4xl font-bold text-gray-800 mb-6">ابدأ الآن</h2>
+    <p class="text-lg text-gray-700 mb-8">انضم إلينا واحصل على تجربة إدارة ملفات ووثائق آمنة وسهلة الاستخدام.</p>
+    
+    {% if 'user_id' not in session %}
+    <div class="flex justify-center gap-6 flex-wrap">
+        <a href="{{ url_for('register') }}" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-blue-700 transform hover:-translate-y-1 transition-all">
+            إنشاء حساب جديد
+        </a>
+        <a href="{{ url_for('login') }}" class="bg-green-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-green-700 transform hover:-translate-y-1 transition-all">
+            تسجيل الدخول
+        </a>
+    </div>
+    {% else %}
+    <a href="{{ url_for('dashboard') }}" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-blue-700 transform hover:-translate-y-1 transition-all">
+        الذهاب إلى لوحة التحكم
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

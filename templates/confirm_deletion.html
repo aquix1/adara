@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+    <div class="text-center mb-6">
+        <div class="bg-red-100 text-red-600 p-3 rounded-full inline-flex mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-red-600 mb-2">{{ message }}</h1>
+        <p class="text-gray-600 mb-4">{{ description }}</p>
+    </div>
+
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-yellow-600 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-yellow-800 text-sm">
+                <strong>كود التأكيد:</strong> 
+                <span class="font-mono text-lg bg-yellow-100 px-2 py-1 rounded">{{ confirmation_code }}</span>
+            </p>
+        </div>
+        <p class="text-yellow-700 text-xs mt-2">هذا الكود صالح لمدة 5 دقائق فقط</p>
+    </div>
+
+    <form method="POST">
+        {% if require_password %}
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 mb-2">كلمة المرور الحالية</label>
+            <input type="password" id="password" name="password" required 
+                   class="w-full px-3 py-2 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+        {% endif %}
+
+        <div class="mb-6">
+            <label for="confirmation_code" class="block text-gray-700 mb-2">أدخل كود التأكيد</label>
+            <input type="text" id="confirmation_code" name="confirmation_code" required 
+                   class="w-full px-3 py-2 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-center font-mono text-lg"
+                   placeholder="XXXXXX" maxlength="6">
+        </div>
+
+        <div class="flex space-x-4 space-x-reverse">
+            <button type="submit" 
+                    class="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-bold">
+                تأكيد الحذف
+            </button>
+            <a href="{{ url_for('settings') }}" 
+               class="flex-1 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition text-center">
+                إلغاء
+            </a>
+        </div>
+    </form>
+
+    <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+        <h3 class="font-bold mb-2">لحماية حسابك:</h3>
+        <ul class="text-sm text-gray-600 list-disc pr-4 space-y-1">
+            <li>تأكد من أنك تريد فعلاً حذف {{ message.lower() }}</li>
+            <li>لا يمكن استرجاع البيانات المحذوفة</li>
+            <li>يجب إدخال كود التأكيد الظاهر أعلاه</li>
+            {% if require_password %}
+            <li>يجب إدخال كلمة المرور الحالية</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const codeInput = document.getElementById('confirmation_code');
+    codeInput.focus();
+    
+    // Auto-advance input
+    codeInput.addEventListener('input', function(e) {
+        if (this.value.length === 6) {
+            this.blur();
+        }
+    });
+});
+</script>
+{% endblock %}

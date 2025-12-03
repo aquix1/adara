@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h1 class="text-3xl font-bold mb-6">تعديل الوثيقة: {{ doc.title }}</h1>
+        
+        <form method="POST">
+            <div class="mb-4">
+                <label for="title" class="block text-gray-700 mb-2">عنوان الوثيقة</label>
+                <input type="text" id="title" name="title" value="{{ doc.title }}" required 
+                       class="w-full px-3 py-2 border rounded-lg">
+            </div>
+            
+            <div class="mb-4">
+                <label for="tags" class="block text-gray-700 mb-2">الكلمات المفتاحية (افصل بينها بفواصل)</label>
+                <input type="text" id="tags" name="tags" value="{{ ', '.join(doc.tags) if doc.tags else '' }}" 
+                       class="w-full px-3 py-2 border rounded-lg" placeholder="كلمة1, كلمة2, كلمة3">
+            </div>
+            
+            <div class="mb-6">
+                <label for="content" class="block text-gray-700 mb-2">محتوى الوثيقة</label>
+                <textarea id="content" name="content" rows="15" required 
+                          class="w-full px-3 py-2 border rounded-lg font-mono">{{ content }}</textarea>
+            </div>
+            
+            <div class="flex space-x-4 space-x-reverse">
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                    حفظ التعديلات
+                </button>
+                <a href="{{ url_for('view_doc', doc_id=doc._id) }}" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition">
+                    إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
